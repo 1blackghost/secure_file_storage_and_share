@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encrypted File Storage & Sharing Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>  
+        body {
+            background: #000;
+            color: white;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            background: #111;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h1 {
+            font-size: 24px;
+            color: yellow;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: yellow;
+        }
+
+        .dashboard {
+            flex: 1;
+            max-width: 1200px;
+            margin: 30px auto;
+            background-color: #111;
+            border-radius: 10px;
+            padding: 40px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(255, 255, 0, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .tabs button {
+            background-color: yellow;
+            color: black;
+            padding: 15px 30px;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .tabs button:hover {
+            background-color: white;
+            color: black;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .btn {
+            background: yellow;
+            color: black;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+            border: 2px solid black;
+            transition: transform 0.3s, background 0.3s;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background: white;
+            color: black;
+        }
+
+        footer {
+            background: #111;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        .input-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 2px solid yellow;
+            border-radius: 8px;
+            background-color: transparent;
+            color: white;
+        }
+
+        .password-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: black;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(255, 255, 0, 0.7);
+            z-index: 9999;
+            text-align: center;
+        }
+
+        .password-popup h3 {
+            color: yellow;
+            margin-bottom: 20px;
+        }
+
+        .password-popup input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid yellow;
+            border-radius: 8px;
+            background: #111;
+            color: white;
+        }
+
+        .popup-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .popup-btns .btn {
+            width: 48%;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9998;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <h1>Encrypted File Storage & Sharing Dashboard</h1>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+    <p style="display:hidden;color:green;font:bold;" id="msg" ></p>
+    <p style="display:hidden;color:red;font:bold;" id="error" ></p>
+
+    <div class="dashboard">
+        <div class="tabs">
+            <button class="tab-button" data-tab="share-files">Share Files</button>
+            <button class="tab-button" data-tab="upload">Upload</button>
+            <button class="tab-button" data-tab="encrypt">My Files</button>
+            <button class="tab-button" data-tab="notifications">Notifications</button>
+        </div>
+
+        <div class="tab-content" id="share-files">
+            <h2>Share Files</h2>
+            <p>Securely share your encrypted files with others. Upload and share the link with the decryption key.</p>
+            <br><br>
+            <div class="password-popup" id="password-popup3">
+                <h4>Enter FileName: </h4>
+                <input type="text" id="filename-input" placeholder="Enter filename">
+                <h4>Enter Receiver Email: </h4>
+                <input type="text" id="email-input" placeholder="Enter receiver email..">
+                <button id="submit-key3" class="btn">Submit</button>
+            </div>
+            <a id="share-files" class="btn">Share Files</a>
+        </div>
+
+        <div class="tab-content" id="upload">
+            <h2>Upload Your Files</h2>
+            <p>Select files from your device to upload and store them securely.</p>
+            <div class="input-wrapper">
+                <input type="file" id="file-upload" />
+                <button class="btn" id="upload-btn">Upload</button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="encrypt">
+            <h2>Encrypted Your Files</h2>
+            <div id="files">Loading files...</div>
+            <div id="file-details"></div>
+            <div class="password-popup" id="password-popup2">
+                <h4>Enter Key</h4>
+                <input type="password" id="key-input" placeholder="Enter your key">
+                <button id="submit-key2" class="btn">Submit</button>
+                <button id="close-popup2" class="btn">Close</button>
+            </div>
+            
+        </div>
+        <div class="tab-content" id="notifications">
+            <h2>Encrypted Your Files</h2>
+            <div id="notes">Loading files...</div>
+            
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="password-popup" id="password-popup">
+        <h3>Enter Password to Upload</h3>
+        <input type="password" id="upload-password" placeholder="Enter password">
+        <div class="popup-btns">
+            <button class="btn" id="submit-btn">Submit</button>
+            <button class="btn" id="cancel-btn">Cancel</button>
+        </div>
+    </div>
+
+
+    <div class="overlay" id="overlay"></div>
+    <div class="password-popup" id="secret">
+        <h3 id="as">Request for and from:</h3>
+        <h3 id="from"></h3>
+        <h3 id="filename"></h3>
+
+        <input type="password" id="upload-password12" placeholder="Enter password">
+        <div class="popup-btns">
+            <button class="btn" id="submit">Submit</button>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2025 Encrypted File Storage & Sharing. All rights reserved.</p>
+    </footer>
+
+    <script>
+        $('#submit').on('click', function() {
+    const password = $('#upload-password12').val().trim();
+    const filename = $("#filename").text();
+    const receiver = $("#from").text();
+
+    if (password) {
+        $.ajax({
+            url: '/request_key',  
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ password: password,filename:filename,receiver:receiver}),
+            success: function(response) {
+                $("#msg").text('Key requested successfully!');
+                $('#secret').hide();  
+                $('#overlay').hide();
+            },
+            error: function() {
+                $("#err").text("Failed to request key!");
+            }
+        });
+    } else {
+        $("#err").text('Please enter a password');
+    }
+});
+function pingAndDownload() {
+        $.ajax({
+            url: "/get_my_send",
+            type: "GET",
+            success: function(response) {
+                console.log(response);
+                if (response.status === "ok") {
+                    console.log("here")
+                    window.location = "/download_file";
+                } else {
+                    setTimeout(pingAndDownload, 1000);  
+                }
+            },
+            error: function() {
+                console.error("Failed to ping server.");
+                setTimeout(pingAndDownload, 1000);  
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        pingAndDownload();
+    });
+function pingServer() {
+    $.ajax({
+        url: '/check_for',  
+        method: 'GET',
+        success: function(response) {
+            if (response.data && response.data.length > 0) {
+                let content = '';
+                response.data.forEach(item => {
+                    $('#filename').text(item.filename);
+                    $('#from').text(item.receiver);
+
+
+                });
+                $('#secret').show();
+                $("#cancel").click(function () {
+                    $("#overlay, #password-popup").fadeOut();
+                    $("#overlay, #password-popup3").fadeOut();
+                });
+
+
+            } else {
+                $('#secret').hide();
+            }
+        },
+        error: function() {
+            console.log('Error pinging server');
+        }
+    });
+}
+
+setInterval(pingServer, 1500);
+
+
+$(document).on('click', '.send-request-btn', function() {
+        const fileId = $(this).data('file-id');
+        const filename = $(this).data('filename');
+        const email = $(this).data('email');
+
+
+        $.ajax({
+            url: '/get_file',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                file_id: fileId,
+                filename: filename,
+                email: email
+            }),
+            success: function(response) {
+                console.log("Request sent:", response);
+                $("#msg").text("Request Sent!");
+            },
+            error: function(error) {
+                console.error("Error sending request:", error);
+                $("#err").text("Failed to Sent!");
+
+            }
+        });
+    });
+function fetchData() {
+        $.ajax({
+            url: '/pass_data',   
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                const notesDiv = $("#notes");
+                notesDiv.empty();  
+
+                if (response.data && response.data.length > 0) {
+                    response.data.forEach((item, index) => {
+                        const filename = item.filename.split('\\').pop();  
+
+                        const row = `
+                        <div class="file-row" style="border-bottom: 1px solid #ccc; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>File:</strong> ${filename}<br>
+                                <strong>From:</strong> ${item.name}
+                            </div>
+                            <button 
+                                class="send-request-btn" 
+                                data-file-id="${item.id}"
+                                data-filename="${filename}" 
+                                data-email="${item.name}"  
+                                style="background-color: yellow; color: black; padding: 5px 10px; border: none; cursor: pointer;">
+                                Send Request Access
+                            </button>
+                        </div>
+                    `;
+                        notesDiv.append(row);
+                    });
+                } else {
+                    notesDiv.html(`<p>No notifications found.</p>`);
+                }
+            },
+            error: function(error) {
+                console.error("Error fetching data:", error);
+                $("#notes").html(`<p>Error loading files.</p>`);
+            }
+        });
+    }
+
+    $(document).on('click', '.send-request-btn', function() {
+        const fileId = $(this).data('file-id');
+        $("#msg").text("Request Send!");
+    });
+
+    setInterval(fetchData, 2000);
+
+    fetchData();
+        $("#submit-key3").click(function () {
+            
+            const filename = $("#filename-input").val();
+            const email = $("#email-input").val();
+            console.log(filename,email);
+            $.ajax({
+                url: '/send',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    filename: filename,
+                    key: email,
+                }),
+                success: function(response) {
+                    console.log("Download initiated:", response);
+                    $("#msg").text("Message Sent!");
+                    $('#overlay, #password-popup3').fadeOut();  
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                    $("#error").text("Failed to send msg or file not found!");
+
+                    $('#overlay, #password-popup3').fadeOut();  
+                }
+            });
+            
+        });
+         $("#share-files").click(function () {
+            $("#overlay, #password-popup3").fadeIn();
+        });
+        $(".tab-button").click(function () {
+            const targetTab = $(this).data("tab");
+            $(".tab-content").removeClass("active");
+            $("#" + targetTab).addClass("active");
+        });
+    
+        $(".tab-button:first").click();
+    
+        $("#upload-btn").click(function () {
+            $("#overlay, #password-popup").fadeIn();
+        });
+    
+        $("#cancel-btn").click(function () {
+            $("#overlay, #password-popup").fadeOut();
+            $("#overlay, #password-popup3").fadeOut();
+        });
+        
+        $("#submit-btn").click(function () {
+            const password = $("#upload-password").val();
+            const fileInput = $("#file-upload")[0].files[0];
+    
+            if (!fileInput) {
+                $("#error").text("Please select a file!");
+                return;
+            }
+    
+            if (!password) {
+                $("#error").text("Please enter a password");
+                return;
+            }
+    
+            const formData = new FormData();
+            formData.append("image", fileInput);
+            formData.append("key", password);
+    
+            fetch("/upload_image", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    $("#upload-btn").click(function () {
+                    $("#overlay, #password-popup").fadeOut();
+                    });
+                    $("#msg").text("Uploaded and ecnrypted.");
+                    $("#msg").fadeIn();
+                } else {
+                    $("#error").text("Failed to upload file");
+
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                $("#error").text("An error occured during upload");
+
+            });
+    
+            $("#overlay, #password-popup").fadeOut();
+        });
+        function fetchFiles() {
+        $.get('/user-files/', function(data) {
+            if (data.success) {
+                const filesDiv = $('#files');
+                filesDiv.empty();  
+
+                if (data.files.length > 0) {
+                    data.files.forEach((file, index) => {
+                        const filename = file.filename.split('\\').pop();  
+                        const filePath = file.filename;
+
+                        const fileItem = `
+                            <div class="file-item">
+                                <span>${filename}</span>
+                                <button class="btn download-btn" data-path="${filePath}">Download</button>
+                            </div>
+                        `;
+
+                        filesDiv.append(fileItem);
+                    });
+
+                    $('.download-btn').click(function() {
+                        const filePath = $(this).data('path');
+                        showFileDetails(filePath);
+                    });
+
+                } else {
+                    filesDiv.html('<p>No files uploaded yet.</p>');
+                }
+            } else {
+                $('#files').html('<p>Failed to load files.</p>');
+            }
+        });
+    }
+
+    function showFileDetails(filePath) {
+        $("#close-popup2").click(function () {
+            $("#overlay, #password-popup2").fadeOut();
+        });
+            const parts = filePath.split(/[\\/]/);  
+    const filename = parts.pop();   
+        $("#password-popup2").fadeIn();
+        $('#submit-key2').click(function() {
+            const key = $('#key-input').val();
+            if (!key) {
+                $("#error").text("Please enter a key");
+
+                return;
+            }
+
+            $.ajax({
+                url: '/download',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    filename: filename,
+                    key: key
+                }),
+                success: function(response) {
+                    console.log("Download initiated:", response);
+                    $("#msg").text("Downloading started");
+
+                    $('#overlay, #password-popup2').fadeOut();
+                    window.location="/download_file";  
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                    $("#error").text("Failed to download or invalid key!");
+
+                    $('#overlay, #password-popup2').fadeOut();  
+                }
+            });
+        });
+    }
+
+    $(document).ready(function() {
+
+        fetchFiles();
+        setInterval(fetchFiles, 3000);  
+    });
+    </script>
+    
+
+</body>
+</html>

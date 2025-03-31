@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encrypted File Storage & Sharing App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to right, #000000, #434343);
+            color: white;
+            text-align: center;
+        }
+
+        nav {
+            background: black;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+        }
+
+        nav h1 {
+            font-size: 24px;
+            color: yellow;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: yellow;
+        }
+
+        .hero {
+            height: 80vh;
+            background-image: url('https://i.ibb.co/x82Lxqn1/OIP.jpg'); 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: yellow;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            background: black;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+            border: 2px solid white;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background: yellow;
+        }
+
+        section {
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .about, .features, .contact {
+            background: #222;
+            border-radius: 10px;
+            padding: 40px;
+            margin: 20px;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 20px;
+            background: #111;
+        }
+
+        footer p {
+            color: yellow;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>Encrypted File Storage & Sharing</h1>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#features">Features</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Secure Your Files with Encryption</h1>
+        <div class="buttons">
+            <a href="/login" class="btn">Login</a>
+            <a href="/signup" class="btn">Get Started</a>
+        </div>
+    </div>
+
+    <section class="about" id="about">
+        <h2>About Us</h2>
+        <p>Our app allows you to securely encrypt and decrypt files, ensuring your data is safe during storage and while sharing with others. Whether you're storing sensitive documents or sharing files across the web, our encryption system ensures only authorized users can access your information.</p>
+    </section>
+
+    <section class="features" id="features">
+        <h2>Features</h2>
+        <ul style="list-style-type: none; padding: 0;">
+            <li><strong>Advanced Encryption:</strong> End-to-end encryption for all files, ensuring privacy and security.</li>
+            <li><strong>Easy File Upload & Download:</strong> Seamlessly upload and download encrypted files with ease.</li>
+            <li><strong>File Sharing:</strong> Securely share encrypted files with anyone, ensuring they stay protected.</li>
+            <li><strong>Cross-Platform:</strong> Access your encrypted files from any device, anywhere, anytime.</li>
+            <li><strong>Decryption Keys:</strong> Share decryption keys securely with trusted recipients for safe file access.</li>
+            <li><strong>File Backup:</strong> Automatically back up encrypted files to ensure data safety even in case of device failure.</li>
+        </ul>
+    </section>
+
+    <section class="contact" id="contact">
+        <h2>Contact Us</h2>
+        <p>Email: support@fileapp.com | Phone: +123 456 7890</p>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Encrypted File Storage & Sharing. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

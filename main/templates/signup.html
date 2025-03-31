@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Login -Encrypt storage</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: black;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background: #222;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            width: 350px;
+            box-shadow: 0px 0px 10px rgba(255, 223, 0, 0.5);
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: yellow;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: #333;
+            color: white;
+            font-size: 16px;
+        }
+
+        .btn {
+            background: yellow;
+            color: black;
+            padding: 12px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: white;
+            color: black;
+        }
+
+        .links {
+            margin-top: 15px;
+        }
+
+        .links a {
+            color: yellow;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Signup</h2>
+        <form method="post" action="/signupData" id="form">
+            <input type="text" name="username" class="input-field" placeholder="Username" required>
+            <input type="email" name="email" class="input-field" placeholder="Email" required>
+            <input type="password" name="password" class="input-field" placeholder="Password" required>
+            <input type="password" name="confpassw" class="input-field" placeholder="Confirm Password" required>
+            <button type="submit" class="btn">Signup</button>
+        </form>
+        
+        <div class="links">
+            <p><a href="/login">Already Have An Account?</a></p>
+        </div>
+    </div>
+
+</body>
+<script>
+    $(document).ready(function () {
+        $("#form").submit(function (event) {
+            event.preventDefault(); 
+            
+            let formData = {
+                username: $("input[name='username']").val(),
+                email: $("input[name='email']").val(),
+                password: $("input[name='password']").val(),
+                confpassw: $("input[name='confpassw']").val()
+            };
+
+            console.log("Sending Data:", formData); 
+            
+            $.ajax({
+                type: "POST",
+                url: "/signupData",
+                data: formData,
+                success: function (response) {
+                    console.log("Success:", response);
+                    if (response.success) {
+                        window.location.href = "/login"; 
+                    }
+                },
+                error: function (xhr) {
+                    console.log("Error:", xhr.responseText);
+                    alert("Signup failed: " + xhr.responseText); 
+                }
+            });
+        });
+    });
+</script>
+
+</html>
